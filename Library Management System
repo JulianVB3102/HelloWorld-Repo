@@ -1,0 +1,94 @@
+# Importing required libraries
+import os
+
+# ======================= CLASS DEFINITION =======================
+
+class Book:
+    """Class to represent a Book with a title and author"""
+
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
+
+    def __str__(self):
+        return f"'{self.title}' by {self.author}"
+
+# ======================= FUNCTIONS =======================
+
+def load_books_from_file(filename="books.txt"):
+    """Load books from a file and return a list of Book objects"""
+    books = []
+    
+    # Check if file exists
+    if not os.path.exists(filename):
+        return books
+    
+    with open(filename, 'r') as file:
+        for line in file:
+            title, author = line.strip().split(',')
+            books.append(Book(title, author))
+    
+    return books
+
+def save_books_to_file(books, filename="books.txt"):
+    """Save books to a file"""
+    with open(filename, 'w') as file:
+        for book in books:
+            file.write(f"{book.title},{book.author}\n")
+
+def display_books(books):
+    """Display a list of books"""
+    for index, book in enumerate(books, start=1):
+        print(f"{index}. {book}")
+
+def add_book(books):
+    """Add a new book to the list"""
+    title = input("Enter the title of the book: ")
+    author = input("Enter the author of the book: ")
+    books.append(Book(title, author))
+    print(f"'{title}' by {author} has been added!")
+
+def delete_book(books):
+    """Delete a book from the list"""
+    display_books(books)
+    book_num = int(input("Enter the number of the book you wish to delete: "))
+
+    if 1 <= book_num <= len(books):
+        removed_book = books.pop(book_num - 1)
+        print(f"Removed {removed_book}!")
+    else:
+        print("Invalid book number.")
+
+# ======================= MAIN PROGRAM =======================
+
+def main():
+    # Load books from file
+    books = load_books_from_file()
+
+    while True:
+        # Display menu
+        print("\nLibrary Management System")
+        print("1. Display books")
+        print("2. Add book")
+        print("3. Delete book")
+        print("4. Save and Exit")
+        
+        # Input choice
+        choice = input("Enter your choice: ")
+
+        # Selection statements
+        if choice == '1':
+            display_books(books)
+        elif choice == '2':
+            add_book(books)
+        elif choice == '3':
+            delete_book(books)
+        elif choice == '4':
+            save_books_to_file(books)
+            print("Books saved. Exiting...")
+            break
+        else:
+            print("Invalid choice!")
+
+if __name__ == "__main__":
+    main()
